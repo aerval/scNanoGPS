@@ -45,6 +45,9 @@ parser.add_option("--samtools",    dest = "samtools",    nargs = 1, default = "s
 parser.add_option("--qualimap",    dest = "qualimap",    nargs = 1, default = "qualimap",
                   help = "Path to qualimap. "
                          "Default: qualimap")
+parser.add_option("--qualimap_param", dest = "qualimap_param", nargs = 1, default = "",
+                  help = "Additional parameters to qualimap. "
+                         "For example: --java-mem-size=4G")
 options, arguments = parser.parse_args()
 
 #===pre-check===
@@ -235,7 +238,7 @@ median_umi_no = round(np.median(umi_per_cell), 2)
 #===qualimap===
 print("Calling Qualimap...", flush = True)
 cmd = options.qualimap + " rnaseq -bam " + \
-      os.path.join(options.tmp_dir, "master.bam") + " -gtf " + options.gtf
+      os.path.join(options.tmp_dir, "master.bam") + " -gtf " + options.gtf + " " + options.qualimap_param
 os.system(cmd)
 
 exonic_ratio, intronic_ratio, intergenic_ratio, overlapping_exon_ratio = 0, 0, 0, 0
