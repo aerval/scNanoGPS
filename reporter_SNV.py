@@ -123,7 +123,7 @@ def merge_longshot(CB_list, options):
 	cmd = 'ls ' + os.path.join(options.tmp_dir, 'splitted_vcf_list_*.merge.vcf.gz') + ' > ' + os.path.join(options.tmp_dir, 'final_vcf_list')
 	os.system(cmd)
 
-	cmd = options.bcftools + ' merge -0 -l ' + os.path.join(options.tmp_dir, 'final_vcf_list') + ' -Ov -o ' + os.path.join(options.o_dir, options.o_pref) + '.raw.vcf.gz'
+	cmd = options.bcftools + ' merge -0 -l ' + os.path.join(options.tmp_dir, 'final_vcf_list') + ' -Oz -o ' + os.path.join(options.o_dir, options.o_pref) + '.raw.vcf.gz'
 	os.system(cmd)
 
 	cmd = 'rm ' + os.path.join(options.tmp_dir, 'splitted_vcf_list_*')
