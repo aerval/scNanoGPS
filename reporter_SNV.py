@@ -116,7 +116,7 @@ def merge_longshot(CB_list, options):
 		      ' -Oz -o ' + sp_f + '.merge.vcf.gz &> /dev/null'
 		os.system(cmd)
 
-		cmd = options.tabix + ' -p vcf ' + sp_f + '.merge.vcf.gz &> /dev/null'
+		cmd = options.tabix + ' --verbosity 0 -p vcf ' + sp_f + '.merge.vcf.gz'
 		os.system(cmd)
 
 	print("\nGenerating final matrix...")
@@ -137,7 +137,7 @@ def merge_longshot(CB_list, options):
 	print("\nTotal SNVs no: " + str(options.counter_raw))
 	print(str(options.counter_pass) + ' SNVs pass filtering...')
 
-	cmd = options.tabix + ' -p vcf ' + os.path.join(options.o_dir, options.o_pref) + '.filtered.vcf.gz &> /dev/null'
+	cmd = options.tabix + ' --verbosity 0 -p vcf ' + os.path.join(options.o_dir, options.o_pref) + '.filtered.vcf.gz'
 	os.system(cmd)
 	print("Done.\n")
 
@@ -298,7 +298,7 @@ def correct_vcf(options, pileup_df):
 	oh.close()
 	fh.close()
 
-	cmd = options.tabix + ' -p vcf ' + os.path.join(options.o_dir, options.o_name) + ' &> /dev/null'
+	cmd = options.tabix + ' --verbosity 0 -p vcf ' + os.path.join(options.o_dir, options.o_name)
 	os.system(cmd)
 
 	if not options.keep_meta:
