@@ -119,7 +119,8 @@ if __name__ == "__main__":
 		writer = scanner_io.open_file(options.CB_mrg_o, "wt")
 		writer.write("Representative cell barcode id:\tincluded cell barcode id")
 		for idx in range(1, (options.forced_no) + 1, 1):
-			writer.write(str(idx) + ": " + str(idx) + "\n")
+			writer.write("\n" + str(idx) + ": " + str(idx))
+		writer.write("\n")
 		writer.close()
 
 	#===draw log10 dist plot===
