@@ -215,7 +215,8 @@ def merge_mpileup(CB_list, options):
 		print("Processing " + str(CB_no) + " of " + str(CB_total) + " ... ", end = "\r", flush = True)
 		dp_f  = os.path.join(options.tmp_dir, CB) + '.mpileup'
 		dp_df = pd.read_csv(dp_f, sep = '\t', names = col_list, quoting = 3)
-		dp_df['POS'] = dp_df['POS'].apply(str)
+		dp_df['CHROM'] = dp_df['CHROM'].apply(str)
+		dp_df['POS']   = dp_df['POS'].apply(str)
 
 		dp_df = dp_df.merge(pileup_df.loc[:, ['CHROM', 'POS', 'ALT']], how = 'left', on = ['CHROM', 'POS'])
 
