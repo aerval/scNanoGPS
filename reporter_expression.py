@@ -30,7 +30,7 @@ parser.add_option("-t",              dest = "ncores",        nargs = 1, default 
                          "Default: 1", type = "int")
 parser.add_option("--min_gene_no",   dest = "min_gene_no",   nargs = 1, default = 300,
                   help = "Minimal number of gene per cell. "
-                         "Default: 300")
+                         "Default: 300", type = "int")
 parser.add_option("--sel_bc_o",      dest = "sel_bc_o",      nargs = 1, default = "filtered_barcode_list.txt",
                   help = "Filtered cell barcode list. "
                          "Default: filtered_barcode_list.txt")
