@@ -156,8 +156,7 @@ sh run_scNanoGPS.sh
 
 # Results of scNanoGPS:
 By default, the matrices of gene expression, isoform, and SNV (single nucleotide variation) are under scNanoGPS_res.
-
-
+There is also a summary report under scNanoGPS_res named "summary.txt"
 
 # Step-by-Step running scNanoGPS:
 If you prefer to run each components of scNanoGPS step-by-step, the following tutorial can walk you through all the components of scNanoGPS.
