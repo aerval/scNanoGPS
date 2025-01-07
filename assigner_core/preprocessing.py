@@ -30,9 +30,9 @@ def getOptions():
 	parser.add_option("--CB_log10_dist_o", dest = "CB_log10_dist_o", nargs = 1, default = "CB_log10_dist.png",
                           help = "File name used for plotting log10 UMI number distribution. "
                                  "Default: CB_log10_dist.png")
-	parser.add_option("--CB_mrg_thr",  dest = "CB_mrg_thr",  nargs = 1, default = 2,
+	parser.add_option("--CB_mrg_thr",  dest = "CB_mrg_thr",  nargs = 1, default = 1,
                           help = "Threshold of distance for merging cell barcodes. "
-                                 "Default: 2", type = "int")
+                                 "Default: 1", type = "int")
 	parser.add_option("--CB_mrg_dist", dest = "CB_mrg_dist", nargs = 1, default = "CB_merged_dist.tsv.gz",
                           help = "File name for distance matrix of merging cell barcodes. "
                                  "Default: CB_merged_dist.tsv.gz")
