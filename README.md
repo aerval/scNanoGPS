@@ -148,8 +148,8 @@ scNanoGPS uses the following third party tools for mapping again genome referenc
     ```
 
 # Using scNanoGPS
-Please re-use the master run_scNanoGPS.sh for your convenience.
-Make sure to update the path inside the master script with text editor, then run the script with the following command.
+Please re-use the master script "[run_scNanoGPS.sh](run_scNanoGPS.sh)" for your convenience.
+Make sure to update the path inside the master script with any text editor you like, then run the script with the following command.
 ```
 sh run_scNanoGPS.sh
 ```
