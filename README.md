@@ -154,6 +154,14 @@ Make sure to update the path inside the master script with any text editor you l
 sh run_scNanoGPS.sh
 ```
 
+# Results of scNanoGPS:
+By default, the matrices of gene expression, isoform, and SNV (single nucleotide variation) are under scNanoGPS_res.
+
+
+
+# Step-by-Step running scNanoGPS:
+If you prefer to run each components of scNanoGPS step-by-step, the following tutorial can walk you through all the components of scNanoGPS.
+
 # Step 1: NanoQC
 ### Read length distribution <br />
 scNanoGPS contains a script named “read_length_profiler.py” to compute the raw read lengths of all reads.  The script can either read through individual FastQ/Fast5 files or all FastQ/Fast5 files under a given folder. The raw read length histogram is drawn accordingly.
