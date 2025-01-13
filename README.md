@@ -354,7 +354,7 @@ The master FastQ file of all cells is demultiplexed according to the true CB lis
     --tmp_dir=TMP_DIR     Temporary folder name. Default: tmp
     -t NCORES             Number of cores for computing. Default: 1
     --log=LOG_F_NAME      Log file name. Default: curator.log.txt
-    --umi_ld=UMI_LD       Levenshtein distance for merging UMI. Default: 2
+    --umi_ld=UMI_LD       Levenshtein distance for merging UMI. Default: 1
     --keep_meta=KEEP_META
                           Set it to 1 to keep meta data, e.g. sam files, for futher checking.
                           Default: None
