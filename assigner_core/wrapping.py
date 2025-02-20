@@ -63,9 +63,6 @@ def estimate_rescue_cell_no(df):
 def batch_seq_comp(query, target, options):
 	import time, distance, os
 
-	print("Calculating Levenshtein distance on " + str(query[0]) + ": " + query[1] + " ...")
-	start_time = time.time()
-
 # target:
 #          idx                BC
 # 0          1  CTACGAAGTGATGAGG
@@ -80,13 +77,6 @@ def batch_seq_comp(query, target, options):
 	tmp_f = os.path.join(options.tmp_dir, "assigner_tmp_") + str(query[0]) + ".tsv"
 
 	target.loc[target["distance"] <= options.CB_mrg_thr, ["id1", "idx", "distance"]].to_csv(tmp_f, header = None, index = None, sep = "\t")
-
-	time_elapse = time.time() - start_time
-	hours   = time_elapse // 3600
-	rest_t  = time_elapse % 3600
-	minutes = rest_t // 60
-	seconds = rest_t % 60
-	print("Calc. LD on " + query[1] + " spent %d : %d : %.2f" % (hours, minutes, seconds))
 
 	return 1
 
