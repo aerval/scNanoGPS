@@ -33,7 +33,7 @@ def getOptions():
 	parser.add_option("--log",        dest = "log_f_name", nargs = 1, default = "curator.log.txt",
                           help = "Log file name. "
                                  "Default: curator.log.txt")
-	parser.add_option("--umi_ld",     dest = "umi_ld",     nargs = 1, default = 2,
+	parser.add_option("--umi_ld",     dest = "umi_ld",     nargs = 1, default = 1,
                           help = "Levenshtein distance for merging UMI. "
                                  "Default: 2")
 	parser.add_option("--keep_meta",  dest = "keep_meta",  nargs = 1, default = None,

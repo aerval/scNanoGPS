@@ -147,6 +147,20 @@ scNanoGPS uses the following third party tools for mapping again genome referenc
     perl annotate_variation.pl -buildver hg38 -downdb -webfrom annovar dbnsfp42c hg38db/
     ```
 
+# Using scNanoGPS
+Please re-use the master script "[run_scNanoGPS.sh](run_scNanoGPS.sh)" for your convenience.
+Make sure to update the path inside the master script with any text editor you like, then run the script with the following command.
+```
+sh run_scNanoGPS.sh
+```
+
+# Results of scNanoGPS:
+By default, the matrices of gene expression, isoform, and SNV (single nucleotide variation) are under scNanoGPS_res.
+There is also a summary report under scNanoGPS_res named "summary.txt"
+
+# Step-by-Step running scNanoGPS:
+If you prefer to run each components of scNanoGPS step-by-step, the following tutorial can walk you through all the components of scNanoGPS.
+
 # Step 1: NanoQC
 ### Read length distribution <br />
 scNanoGPS contains a script named “read_length_profiler.py” to compute the raw read lengths of all reads.  The script can either read through individual FastQ/Fast5 files or all FastQ/Fast5 files under a given folder. The raw read length histogram is drawn accordingly.
@@ -261,7 +275,7 @@ To boost the scanning speed, we scan the first and last 100 nucleotides of reads
 # Step 3: Assigner
 This step of scNanoGPS pipeline is executed by a python script called “assigner.py”. This script is designed for CB collapsing and estimation of the optimal CB number without guidance of 10X short-read sequencing data or any CB whitelist.
 To estimate the number of optimal CB, we use edge detection strategy to find out the point where has dramatical signal dropping (Fig. 1b). The detailed method is that the assigner first calculates the supporting UMI number to every CB, and sorts the CB list by UMI number in decreasing order. Following by computing the partial derivatives (slopes) per CB in log10 scale, the medium number of slope changes in log10 scale are computed per 0.001 log10 tick. Then the maximal medium log10 slope change is selected, and where is the crude anchoring for following processes. To fathom the fully signal dropping point and include more useful CBs, we allow 10% more signal in log10 scale.
-Next, the script collapses CBs which have similar sequences. Previous study shows that the most accurate criterial for CB and UMI collapsing in Illumina samples are three and two Levenshtein Distance (LD), respectively. Here we use two LD to merge similar CB as Refinery Local Optimization. Then a list of representative CB having sufficient supporting read is generated.
+Next, the script collapses CBs which have similar sequences. Previous study shows that the most accurate criterial for CB and UMI collapsing in Illumina samples are three and two Levenshtein Distance (LD), respectively. Here we use one LD to merge similar CB as Refinery Local Optimization. Then a list of representative CB having sufficient supporting read is generated.
 Alternatively, you can forcely assign cell barcode number by using "forced_no" parameter.
 
 - Manual of assigner.py
@@ -287,7 +301,7 @@ Alternatively, you can forcely assign cell barcode number by using "forced_no" p
                           distribution. Default: CB_log10_dist.png
     --CB_mrg_thr=CB_MRG_THR
                           Threshold of distance for merging cell barcodes.
-                          Default: 2
+                          Default: 1
     --CB_mrg_dist=CB_MRG_DIST
                           File name for distance matrix of merging cell
                           barcodes. Default: CB_merged_dist.tsv.gz
@@ -340,7 +354,7 @@ The master FastQ file of all cells is demultiplexed according to the true CB lis
     --tmp_dir=TMP_DIR     Temporary folder name. Default: tmp
     -t NCORES             Number of cores for computing. Default: 1
     --log=LOG_F_NAME      Log file name. Default: curator.log.txt
-    --umi_ld=UMI_LD       Levenshtein distance for merging UMI. Default: 2
+    --umi_ld=UMI_LD       Levenshtein distance for merging UMI. Default: 1
     --keep_meta=KEEP_META
                           Set it to 1 to keep meta data, e.g. sam files, for futher checking.
                           Default: None
