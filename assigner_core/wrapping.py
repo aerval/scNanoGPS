@@ -69,6 +69,21 @@ def batch_seq_comp(query, target, options):
 # 1          2  TTGTGCCTCATTGACA
 
 	target = target.loc[target["idx"] > query[0], :].copy()
+	target["INDEL"] = True
+
+	### prematching based on substrings -> only calculate distance to partial matches
+	num_1to8 = dna_to_int(query[1][:8])
+	num_8to16 = dna_to_int(query[1][8:])
+	num_7to15 = dna_to_int(query[1][7:15])
+
+	targetS = target[(target["BC_1to8"].values == num_1to8) or
+                     (target["BC_8to16"].values == num_8to16)]
+	targetS["INDEL"] = False
+
+	targetINDEL = target[(target["BC_7to15"].values == num_8to16) or
+					     (target["BC_8to16"].values == num_7to15)]
+
+	target = pd.concet([targetS, targetINDEL])
 
 	target.loc[:, "id1"]      = query[0]
 	target.loc[:, "BC1"]      = query[1]
@@ -76,7 +91,8 @@ def batch_seq_comp(query, target, options):
 
 	tmp_f = os.path.join(options.tmp_dir, "assigner_tmp_") + str(query[0]) + ".tsv"
 
-	target.loc[target["distance"] <= options.CB_mrg_thr, ["id1", "idx", "distance"]].to_csv(tmp_f, header = None, index = None, sep = "\t")
+	target.loc[((target["distance"].values == 2) & (target["INDEL"].values)) or (target["distance"].values == 1),
+	           ["id1", "idx", "distance"]].to_csv(tmp_f, header = None, index = None, sep = "\t")
 
 	return 1
 
@@ -129,3 +145,44 @@ def merge_cb(mrg_sel, dist_df, mrg_dist):
 
 	return res_df
 
+def dna_to_int(dna_sequence):
+	"""
+    Convert a DNA sequence of length 8 to a 16-bit integer.
+
+	Each nucleotide is represented by 2 bits:
+	A -> 00 (0)
+	C -> 01 (1)
+	T -> 10 (2)
+	G -> 11 (3)
+
+	Args:
+		dna_sequence (str): DNA sequence string of length 8
+
+	Returns:
+		int: 16-bit integer representation
+
+	Raises:
+		ValueError: If sequence contains non ACGT character
+		ValueError: If sequence length isn't 8 or contains invalid characters
+	"""
+	# Validate input
+    if len(dna_sequence) != 8:
+        raise ValueError(f"DNA sequence must be exactly 8 characters long")
+
+	valid_nucleotides = set('ACTG')
+	if not all(nuc in valid_nucleotides for nuc in dna_sequence):
+		raise ValueError(f"Invalid nucleotide found. Must only contain ACTG")
+
+	# Convert nucleotides to binary values
+	nucleotide_values = {'A': 0, 'C': 1, 'T': 2, 'G': 3}
+
+	# Initialize result
+	result = 0
+
+	# Process each nucleotide
+	for i, nucleotide in enumerate(reversed(dna_sequence)):
+		value = nucleotide_values[nucleotide]
+		position = i * 2  # Each nucleotide takes 2 bits
+		result |= value << position
+
+	return result

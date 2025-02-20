@@ -73,7 +73,7 @@ if __name__ == "__main__":
 	if options.forced_no == 0:
 		#===select CB having read no. passing threshold===
 		print("Preparing CB table...", flush = True)
-		mrg_sel = UMI_df.loc[UMI_df['idx'] <= cell_no_ext, ['idx', 'BC']].sort_values('idx', ascending = True).reset_index(drop = True)
+		mrg_sel = UMI_df.loc[:, ['idx', 'BC']].sort_values('idx', ascending = True).reset_index(drop = True)
 		print("Done", flush = True)
 
 		#===Calc distance===
@@ -84,8 +84,19 @@ if __name__ == "__main__":
 # 0          1  CTACGAAGTGATGAGG
 # 1          2  TTGTGCCTCATTGACA
 
+		# accelerate assignment by only checking BCs that partially match
+		# do check on 16 bit ints
+		mrg_sel['BC_1to8'] = mrg_sel['BC'].str.slice(stop=8).apply(wrapping.dna_to_int) # edit in second half
+		mrg_sel['BC_8to16'] = mrg_sel['BC'].str.slice(start=8).apply(wrapping.dna_to_int) # S or I in first half
+		mrg_sel['BC_7to15'] = mrg_sel['BC'].str.slice(start=7, stop=15).apply(wrapping.dna_to_int) # D in first half
+
+		### TODO: select based on srl (barcode list) file
+		queries = mrg_sel.iloc[0:(mrg_sel.shape[0] - 1)].values.tolist()[:cell_no_ext]
+
+		### TODO: remove known barcodes from mrg_sel (do not merge real BCs)
+
 		with poolcontext(processes = options.ncores) as pool:
-			pool.map(partial(wrapping.batch_seq_comp, target = mrg_sel, options = options), mrg_sel.iloc[0:(mrg_sel.shape[0] - 1)].values.tolist())
+			pool.map(partial(wrapping.batch_seq_comp, target = mrg_sel, options = options), queries)
 
 		#===merging CB===
 		step_time = time.time()
