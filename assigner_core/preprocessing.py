@@ -49,6 +49,9 @@ def getOptions():
 	parser.add_option("--smooth_res",  dest = "smooth_res",  nargs = 1, default = 0.001, type = float,
                           help = "Smoothening resolution on log10 scale. "
                                  "Default: 0.001")
+	parser.add_option("--srl", dest = "srl", nargs = 1, default = None,
+                          help = "barcode list file of barcode derived from short read data. In tsv.gz format. "
+                                 "Default: None")
 
 	return parser
 
