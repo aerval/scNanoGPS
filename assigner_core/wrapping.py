@@ -76,12 +76,12 @@ def batch_seq_comp(query, target, options):
 	num_8to16 = dna_to_int(query[1][8:])
 	num_7to15 = dna_to_int(query[1][7:15])
 
-	targetS = target[(target["BC_1to8"].values == num_1to8) or
-                     (target["BC_8to16"].values == num_8to16)]
+	targetS = target.loc[(target["BC_1to8"].values == num_1to8) or
+                         (target["BC_8to16"].values == num_8to16)]
 	targetS["INDEL"] = False
 
-	targetINDEL = target[(target["BC_7to15"].values == num_8to16) or
-					     (target["BC_8to16"].values == num_7to15)]
+	targetINDEL = target.loc[(target["BC_7to15"].values == num_8to16) or
+                             (target["BC_8to16"].values == num_7to15)]
 
 	target = pd.concet([targetS, targetINDEL])
 
