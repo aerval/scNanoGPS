@@ -166,8 +166,8 @@ def dna_to_int(dna_sequence):
 		ValueError: If sequence length isn't 8 or contains invalid characters
 	"""
 	# Validate input
-    if len(dna_sequence) != 8:
-        raise ValueError(f"DNA sequence must be exactly 8 characters long")
+	if len(dna_sequence) != 8:
+		raise ValueError(f"DNA sequence must be exactly 8 characters long")
 
 	valid_nucleotides = set('ACTG')
 	if not all(nuc in valid_nucleotides for nuc in dna_sequence):
