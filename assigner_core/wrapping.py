@@ -95,7 +95,7 @@ def seq_comp(batch_data, options):
 
 	return [batch_data['id1'], batch_data['id2'], distance.levenshtein(batch_data['BC1'], batch_data['BC2'])]
 
-def merge_cb_new(mrg_sel, options):
+def merge_cb_new(BC_index, options):
 	import pandas as pd
 	import os
 
@@ -115,11 +115,15 @@ def merge_cb_new(mrg_sel, options):
 	dist_df = pd.read_csv(options.CB_mrg_dist, sep = "\t", header = 0, compression = options.CB_mrg_dist_compression)
 
 	res = dict()
-	for idx in mrg_sel['idx']:
+	for idx in BC_index:
 		res[str(idx)] = str(idx)
 
 	for idx, row in dist_df.iterrows():
 		res[str(row['id2'])] = res[str(row['id1'])]
+
+	# remove those barcodes that are at equal distance to two other barcodes (not sure if this happends but still)
+	for idx in dist_df.id2.value_counts()[dist_df.id2.value_counts() > 1].index.tolist():
+		res.pop(str(idx))
 
 	return pd.DataFrame.from_dict(res, orient = 'index').reset_index().rename(columns = {'index': 'id1', 0: 'id2'})
 

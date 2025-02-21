@@ -107,8 +107,8 @@ if __name__ == "__main__":
 		#===merging CB===
 		step_time = time.time()
 		print("Merging table...", flush = True)
-		### TODO: only keep real BCs
-		res_df = wrapping.merge_cb_new(mrg_sel, options)
+		BC_index = [q[0] for q in queries]
+		res_df = wrapping.merge_cb_new(BC_index, options)
 		print("Done", flush = True)
 		hours, minutes, seconds = misc.get_time_elapse(step_time)
 		misc.report_time_elapse(hours, minutes, seconds)
