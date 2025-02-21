@@ -76,11 +76,11 @@ def batch_seq_comp(query, target, options):
 	num_8to16 = dna_to_int(query[1][8:])
 	num_7to15 = dna_to_int(query[1][7:15])
 
-	targetS = target.loc[(target["BC_1to8"].values == num_1to8) or
+	targetS = target.loc[(target["BC_1to8"].values == num_1to8) |
                          (target["BC_8to16"].values == num_8to16)]
 	targetS["INDEL"] = False
 
-	targetINDEL = target.loc[(target["BC_7to15"].values == num_8to16) or
+	targetINDEL = target.loc[(target["BC_7to15"].values == num_8to16) |
                              (target["BC_8to16"].values == num_7to15)]
 
 	target = pd.concet([targetS, targetINDEL])
@@ -91,7 +91,7 @@ def batch_seq_comp(query, target, options):
 
 	tmp_f = os.path.join(options.tmp_dir, "assigner_tmp_") + str(query[0]) + ".tsv"
 
-	target.loc[((target["distance"].values == 2) & (target["INDEL"].values)) or (target["distance"].values == 1),
+	target.loc[((target["distance"].values == 2) & (target["INDEL"].values)) | (target["distance"].values == 1),
 	           ["id1", "idx", "distance"]].to_csv(tmp_f, header = None, index = None, sep = "\t")
 
 	return 1
