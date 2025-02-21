@@ -93,13 +93,18 @@ if __name__ == "__main__":
 		### select BCs based on a file of previously defined barcodes
 		if options.srl:
 			defined_BCs = pd.read_table(options.srl, header=None)
-			defined_BCs = set(true_BCs[0].values)
+			defined_BCs = set(defined_BCs[0].values)
 
 			queries = mrg_sel.iloc[0:(mrg_sel.shape[0] - 1)].values.tolist()
 			queries = [q for q in queries if q[1] in defined_BCs]
 
 		else:
 			queries = mrg_sel.iloc[0:(mrg_sel.shape[0] - 1)].values.tolist()[:cell_no_ext]
+
+		if options.bclist:
+			true_BCs = pd.read_table(options.bclist, header=None)
+			true_BCs = set(true_BCs[0].values)
+			mrg_sel = mrg_sel.loc[[not bc in true_BCs for bc in mrg_sel["BC"].values]]
 
 		with poolcontext(processes = options.ncores) as pool:
 			pool.map(partial(wrapping.batch_seq_comp, target = mrg_sel, options = options), queries)

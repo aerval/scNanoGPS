@@ -50,7 +50,10 @@ def getOptions():
                           help = "Smoothening resolution on log10 scale. "
                                  "Default: 0.001")
 	parser.add_option("--srl", dest = "srl", nargs = 1, default = None,
-                          help = "barcode list file of barcode derived from short read data. In tsv.gz format. "
+                          help = "file containing a list of known/defined barcodes (i.e derived from short read data)."
+                                 "Default: None")
+	parser.add_option("--bclist", dest = "bclist", nargs = 1, default = None,
+                          help = "file containing a list of all true barcodes."
                                  "Default: None")
 
 	return parser
