@@ -62,6 +62,7 @@ def estimate_rescue_cell_no(df):
 
 def batch_seq_comp(query, target, options):
 	import time, distance, os
+	import pandas as pd
 
 # target:
 #          idx                BC
@@ -77,13 +78,13 @@ def batch_seq_comp(query, target, options):
 	num_7to15 = dna_to_int(query[1][7:15])
 
 	targetS = target.loc[(target["BC_1to8"].values == num_1to8) |
-                         (target["BC_8to16"].values == num_8to16)]
-	targetS["INDEL"] = False
+                             (target["BC_8to16"].values == num_8to16)]
+	targetS.loc[:, "INDEL"] = False
 
 	targetINDEL = target.loc[(target["BC_7to15"].values == num_8to16) |
-                             (target["BC_8to16"].values == num_7to15)]
+                                 (target["BC_8to16"].values == num_7to15)]
 
-	target = pd.concet([targetS, targetINDEL])
+	target = pd.concat([targetS, targetINDEL])
 
 	target.loc[:, "id1"]      = query[0]
 	target.loc[:, "BC1"]      = query[1]
