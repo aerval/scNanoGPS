@@ -61,8 +61,7 @@ def estimate_rescue_cell_no(df):
 	return est_rescue_CB_no
 
 def batch_seq_comp(query, target, options):
-	import time, distance, os
-	import pandas as pd
+	import time, Levenshtein, os
 
 # target:
 #          idx                BC
@@ -70,30 +69,24 @@ def batch_seq_comp(query, target, options):
 # 1          2  TTGTGCCTCATTGACA
 
 	target = target.loc[target["idx"] > query[0], :].copy()
-	target["INDEL"] = True
 
 	### prematching based on substrings -> only calculate distance to partial matches
 	num_1to8 = dna_to_int(query[1][:8])
 	num_8to16 = dna_to_int(query[1][8:])
 	num_7to15 = dna_to_int(query[1][7:15])
 
-	targetS = target.loc[(target["BC_1to8"].values == num_1to8) |
-                             (target["BC_8to16"].values == num_8to16)]
-	targetS.loc[:, "INDEL"] = False
-
-	targetINDEL = target.loc[(target["BC_7to15"].values == num_8to16) |
-                                 (target["BC_8to16"].values == num_7to15)]
-
-	target = pd.concat([targetS, targetINDEL])
+	target = target.loc[(target["BC_1to8"].values == num_1to8) |
+	                    (target["BC_8to16"].values == num_8to16) |
+	                    (target["BC_7to15"].values == num_8to16) |
+	                    (target["BC_8to16"].values == num_7to15)]
 
 	target.loc[:, "id1"]      = query[0]
 	target.loc[:, "BC1"]      = query[1]
-	target.loc[:, "distance"] = target.apply(lambda x: distance.levenshtein(x["BC"], x["BC1"]), axis = 1)
+	target.loc[:, "distance"] = target["BC"].apply(lambda x: Levenshtein.distance(x, query[1], weights=(1,1,2)))
 
 	tmp_f = os.path.join(options.tmp_dir, "assigner_tmp_") + str(query[0]) + ".tsv"
 
-	target.loc[((target["distance"].values == 2) & (target["INDEL"].values)) | (target["distance"].values == 1),
-	           ["id1", "idx", "distance"]].to_csv(tmp_f, header = None, index = None, sep = "\t")
+	target.loc[(target["distance"].values == 2), ["id1", "idx", "distance"]].to_csv(tmp_f, header = None, index = None, sep = "\t")
 
 	return 1
 
@@ -148,7 +141,7 @@ def merge_cb(mrg_sel, dist_df, mrg_dist):
 
 def dna_to_int(dna_sequence):
 	"""
-    Convert a DNA sequence of length 8 to a 16-bit integer.
+	Convert a DNA sequence of length 8 to a 16-bit integer.
 
 	Each nucleotide is represented by 2 bits:
 	A -> 00 (0)
