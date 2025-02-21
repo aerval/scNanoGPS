@@ -90,10 +90,16 @@ if __name__ == "__main__":
 		mrg_sel['BC_8to16'] = mrg_sel['BC'].str.slice(start=8).apply(wrapping.dna_to_int) # S or I in first half
 		mrg_sel['BC_7to15'] = mrg_sel['BC'].str.slice(start=7, stop=15).apply(wrapping.dna_to_int) # D in first half
 
-		### TODO: select based on srl (barcode list) file
-		queries = mrg_sel.iloc[0:(mrg_sel.shape[0] - 1)].values.tolist()[:cell_no_ext]
+		### select BCs based on a file of previously defined barcodes
+		if options.srl:
+			defined_BCs = pd.read_table(options.srl, header=None)
+			defined_BCs = set(true_BCs[0].values)
 
-		### TODO: remove known barcodes from mrg_sel (do not merge real BCs)
+			queries = mrg_sel.iloc[0:(mrg_sel.shape[0] - 1)].values.tolist()
+			queries = [q for q in queries if q[1] in defined_BCs]
+
+		else:
+			queries = mrg_sel.iloc[0:(mrg_sel.shape[0] - 1)].values.tolist()[:cell_no_ext]
 
 		with poolcontext(processes = options.ncores) as pool:
 			pool.map(partial(wrapping.batch_seq_comp, target = mrg_sel, options = options), queries)
@@ -101,6 +107,7 @@ if __name__ == "__main__":
 		#===merging CB===
 		step_time = time.time()
 		print("Merging table...", flush = True)
+		### TODO: only keep real BCs
 		res_df = wrapping.merge_cb_new(mrg_sel, options)
 		print("Done", flush = True)
 		hours, minutes, seconds = misc.get_time_elapse(step_time)
